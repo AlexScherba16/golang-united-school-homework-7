@@ -2,6 +2,8 @@ package coverage
 
 import (
 	"os"
+	"testing"
+	"time"
 )
 
 // DO NOT EDIT THIS FUNCTION
@@ -18,3 +20,110 @@ func init() {
 
 // WRITE YOUR CODE BELOW
 
+func TestLenEmptyList(t *testing.T) {
+	var p People
+	if p.Len() != 0 {
+		t.Error("the length of the empty list must be zero, not ", p.Len())
+	}
+}
+
+func TestLen(t *testing.T) {
+	var p People
+	p = append(p, Person{firstName: "firstName", lastName: "lastName", birthDay: time.Now()})
+	p = append(p, Person{firstName: "firstName_1", lastName: "lastName_1", birthDay: time.Now()})
+
+	err := p.Len()
+	if err != 2 {
+		t.Error("the length of list must be 2, not", p.Len())
+	}
+}
+
+func TestLess_Birthday(t *testing.T) {
+	lessTestData := map[string]struct {
+		first  Person
+		second Person
+		result bool
+	}{
+		"birthday ok": {
+			first:  Person{firstName: "", lastName: "", birthDay: time.Now().Add(time.Second * 10)},
+			second: Person{firstName: "", lastName: "", birthDay: time.Now()},
+			result: true,
+		},
+		"birthday error": {
+			first:  Person{firstName: "", lastName: "", birthDay: time.Now()},
+			second: Person{firstName: "", lastName: "", birthDay: time.Now().Add(time.Second * 10)},
+			result: false,
+		},
+	}
+
+	var p People
+	for name, data := range lessTestData {
+		p = append(p, data.first, data.second)
+		result := p.Less(0, 1)
+
+		if result != data.result {
+			t.Fatalf("[%s] expected %t, Less function returns %t", name, data.result, result)
+		}
+		p = p[:0]
+	}
+}
+
+func TestLess_FirstName(t *testing.T) {
+	lessTestData := map[string]struct {
+		first  Person
+		second Person
+		result bool
+	}{
+		"first name ok": {
+			first:  Person{firstName: "GFG", lastName: "", birthDay: time.Now()},
+			second: Person{firstName: "Geeks", lastName: "", birthDay: time.Now()},
+			result: true,
+		},
+		"birthday error": {
+			first:  Person{firstName: "Geeks", lastName: "", birthDay: time.Now()},
+			second: Person{firstName: "GFG", lastName: "", birthDay: time.Now().Add(time.Second * 10)},
+			result: false,
+		},
+	}
+
+	var p People
+	for name, data := range lessTestData {
+		p = append(p, data.first, data.second)
+		result := p.Less(0, 1)
+
+		if result != data.result {
+			t.Fatalf("[%s] expected %t, Less function returns %t", name, data.result, result)
+		}
+		p = p[:0]
+	}
+}
+
+func TestLess_LastName(t *testing.T) {
+	lessTestData := map[string]struct {
+		first  Person
+		second Person
+		result bool
+	}{
+		"last name ok": {
+			first:  Person{firstName: "", lastName: "GFG", birthDay: time.Now()},
+			second: Person{firstName: "", lastName: "Geeks", birthDay: time.Now()},
+			result: true,
+		},
+		"last name error": {
+			first:  Person{firstName: "", lastName: "Geeks", birthDay: time.Now()},
+			second: Person{firstName: "", lastName: "GFG", birthDay: time.Now().Add(time.Second * 10)},
+			result: false,
+		},
+	}
+
+	var p People
+	for name, data := range lessTestData {
+		p = append(p, data.first, data.second)
+		result := p.Less(0, 1)
+
+		if result != data.result {
+			t.Fatalf("[%s] expected %t, Less function returns %t", name, data.result, result)
+		}
+		p = p[:0]
+	}
+}
